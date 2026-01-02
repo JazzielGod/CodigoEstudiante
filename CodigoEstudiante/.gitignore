@@ -1,0 +1,25 @@
+bin/
+obj/
+.vs/
+TestResults/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Archivos de publicación
+publish/
+*.pfx
+*.publishsettings
+
+## Paquetes NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+## Archivos de configuración con datos sensibles
+appsettings.json
+appsettings.Development.json
+
+## Otros
+.DS_Store
