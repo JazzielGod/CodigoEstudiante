@@ -1,8 +1,34 @@
 ﻿@model CategoryVM
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@{
+    var title = Model.CategoryId == 0 ? "New Category" : "Edit Category";
+    var btnAction = Model.CategoryId == 0 ? "Add" : "Save";
+}
+@if (ViewBag.message != null)
+{
+    <script>
+        const msg = "@ViewBag.message";
+        const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        Toast.fire({
+            icon: "success",
+            title: msg
+        });
+    </script>
+}
 
 <div class="row">
     <div class="col-6">
-        <h2>New Category</h2>
+        <h2>@title</h2>
         <hr />
         <form action="/Category/AddEdit" method="post">
                 
@@ -14,7 +40,7 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            @if(ViewBag.message != null)
+            @* @if(ViewBag.message != null)
             {
                 <div class="alert alert-success d-flex align-items-center" role="alert">
                     <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
@@ -22,10 +48,10 @@
                         @ViewBag.message
                     </div>
                 </div>
-            }
+            } *@
 
             <div class="d-grid gab-2 d-md-block mt-4">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">@btnAction</button>
                 <a href="/Category/Index" class="btn btn-warning">Back</a>
             </div>
         </form>

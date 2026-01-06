@@ -12,22 +12,36 @@ namespace CodigoEstudiante.Controllers
             return View(categories);
         }
         [HttpGet]
-        public async Task<IActionResult> AddEdit()
+        public async Task<IActionResult> AddEdit(int id)
         {
-            
-            return View();
+            var categoryVM = await _categoryService.GetByIdAsync(id);
+            return View(categoryVM);
         }
         [HttpPost]
         public async Task<IActionResult> AddEdit(CategoryVM entityVM)
         {
             ViewBag.message = null;
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid) return View(entityVM);
+            if(entityVM.CategoryId == 0)
             {
-                return View(entityVM);
+                await _categoryService.AddAsync(entityVM);
+                ModelState.Clear();
+                entityVM = new CategoryVM();
+                ViewBag.message = "Created Cateogory";
             }
-            await _categoryService.AddAsync(entityVM);
-            ViewBag.Message = "Category added successfully!";
-            return View();
+            else
+            {
+                await _categoryService.EditAsync(entityVM);
+                ViewBag.message = "Edited Category";
+            }
+            return View(entityVM);
         }
+
+        public async Task<ActionResult> Delete(int id)
+        {
+            await _categoryService.DeleteAsync(id);
+            return RedirectToAction("index");
+        }
+
     }
 }

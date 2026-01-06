@@ -2,6 +2,7 @@
 using CodigoEstudiante.Repositories;
 using CodigoEstudiante.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace CodigoEstudiante.Services
 {
@@ -27,6 +28,34 @@ namespace CodigoEstudiante.Services
                 Name = viewModel.Name,
             };
             await _categoryRepository.AddAsync(entity);
+        }
+
+        public async Task<CategoryVM?> GetByIdAsync(int Id)
+        {
+            var category = await _categoryRepository.GetByIdAsync(Id);
+            var categoryVM = new CategoryVM();
+
+            if (category != null)
+            {
+                categoryVM.Name = category.Name;
+                categoryVM.CategoryId = category.CategoryId;
+            }
+            return categoryVM;
+        }
+        public async Task EditAsync(CategoryVM viewModel)
+        {
+            var entity = new Category
+            {
+                CategoryId = viewModel.CategoryId,
+                Name = viewModel.Name,
+            };
+            await _categoryRepository.EditAsync(entity);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var category = await _categoryRepository.GetByIdAsync(id);
+            await _categoryRepository.DeleteAsync(category!);
         }
 
     }
