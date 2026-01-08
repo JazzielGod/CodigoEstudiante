@@ -1,5 +1,6 @@
 ﻿using CodigoEstudiante.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CodigoEstudiante.Repositories
 {
@@ -8,6 +9,14 @@ namespace CodigoEstudiante.Repositories
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _dbContext.Set<TEntity>().ToListAsync();
+        }
+        public async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, object>>[]includes)
+        {
+            IQueryable<TEntity> query = _dbContext.Set<TEntity>();
+
+            foreach(var include in includes) query = query.Include(include);
+
+            return await query.ToListAsync();
         }
 
         public async Task AddAsync(TEntity entity)
