@@ -138,8 +138,31 @@ namespace CodigoEstudiante.Services
         public async Task DeleteAsync(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
-            await _productRepository.DeleteAsync(product);
+            await _productRepository.DeleteAsync(product!);
         }
-       
+
+        public async Task<IEnumerable<ProductVM>> GetCatalogAsync(int categoryId = 0, string search = "")
+        {
+            var conditions = new List<Expression<Func<Product, bool>>>
+            {
+                x => x.stock > 0
+            };
+
+            if(categoryId != 0) conditions.Add(x => x.CategoryId == categoryId);
+            if(!string.IsNullOrEmpty(search)) conditions.Add(x => x.Name!.Contains(search));
+
+            var products = await _productRepository.GetAllAsync(conditions: conditions.ToArray());
+
+            var productsVM = products.Select(item => new ProductVM
+            {
+                ProductId = item.ProductId,      
+                Name = item.Name,
+                Description = item.Description,
+                Price = item.Price,
+                stock = item.stock,
+                ImageName = item.ImageName
+            }).ToList();
+            return productsVM;
+        }
     }
 }
