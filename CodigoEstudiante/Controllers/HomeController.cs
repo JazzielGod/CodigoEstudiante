@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using CodigoEstudiante.Models;
 using CodigoEstudiante.Services;
+using CodigoEstudiante.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodigoEstudiante.Controllers
@@ -34,6 +35,41 @@ namespace CodigoEstudiante.Controllers
             var products = await _productService.GetCatalogAsync(search: value);
             var catalog = new CatalogVM { Categories = categories, Products = products, filterBy = $"Results for: {value}" };
             return View("Index", catalog);
+        }
+
+        public async Task<IActionResult> ProductDetail(int id)
+        {
+            var product = await _productService.GetByIdAsync(id);
+            return View(product);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddItemToCart(int productId, int quantity)
+        {
+            var product = await _productService.GetByIdAsync(productId);
+
+            var cart = HttpContext.Session.Get<List<CartItemVM>>("Cart") ?? new List<CartItemVM>();
+
+            if(cart.Find(x => x.ProductId == productId) == null)
+            {
+                cart.Add(new CartItemVM
+                {
+                    ProductId = productId,
+                    ImageName = product.Name,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Quantity = quantity
+                });
+            }
+            else
+            {
+                var updateProduct = cart.Find(x => x.ProductId == productId);
+                updateProduct!.Quantity += quantity;
+            }
+
+            HttpContext.Session.Set("Cart", cart);
+            ViewBag.Message = "Product added to cart successfully!";
+            //return RedirectToAction("ProductDetail", new { id = productId });
+            return View("ProductDetail", product);
         }
 
         public IActionResult Privacy()

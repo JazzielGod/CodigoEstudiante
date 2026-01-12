@@ -73,29 +73,7 @@
     <link href="~/lib/summernote/summernote.min.css" rel="stylesheet" />
 }
 
-@section Scripts{
-        @* Toast condicional *@
-        @if (ViewBag.message != null)
-        {
-            <script>
-                const msg = "@ViewBag.message";
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: "top-end",
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                    didOpen: (toast) => {
-                        toast.onmouseenter = Swal.stopTimer;
-                        toast.onmouseleave = Swal.resumeTimer;
-                    }
-                });
-                Toast.fire({
-                    icon: "success",
-                    title: msg
-                        });
-            </script>
-        }
+@section Scripts{        
     @* Toast condicional *@
     <script src="~/lib/summernote/summernote.min.js"></script>
     <script src="~/lib/summernote/summernote-bs5.min.js"></script>

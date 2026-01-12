@@ -16,6 +16,8 @@ builder.Services.AddScoped(typeof(GenericRepository<>));
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
 
+builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +25,9 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
 }
+
+app.UseSession();
+
 app.UseRouting();
 
 app.UseAuthorization();

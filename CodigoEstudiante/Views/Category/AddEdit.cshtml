@@ -3,30 +3,6 @@
     var title = Model.CategoryId == 0 ? "New Category" : "Edit Category";
     var btnAction = Model.CategoryId == 0 ? "Add" : "Save";
 }
-@if (ViewBag.message != null)
-{
-    @section Scripts {
-        <script>
-            const msg = "@ViewBag.message";
-            const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 2500,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-            Toast.fire({
-                icon: "success",
-                title: msg
-            });
-        </script>
-    }
-}
-
 <div class="row">
     <div class="col-6">
         <h2>@title</h2>
