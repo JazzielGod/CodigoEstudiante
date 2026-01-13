@@ -15,6 +15,6 @@ namespace CodigoEstudiante.Entities
         [Required]
         public string Type { get; set; }
 
-        public Collection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

@@ -13,8 +13,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
  );
 
 builder.Services.AddScoped(typeof(GenericRepository<>));
+builder.Services.AddScoped<OrderRepository>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<OrderService>();
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
 

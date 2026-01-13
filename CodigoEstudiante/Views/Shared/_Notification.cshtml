@@ -1,6 +1,8 @@
 ﻿@{
     // Usamos TempData además de ViewBag para que funcione tras un RedirectToAction
     var message = TempData["message"] ?? ViewBag.Message;
+    var position = TempData["toastPosition"] ?? "top-end";
+
 }
 
 @if (message != null)
@@ -9,7 +11,7 @@
         const msg = "@message";
         const Toast = Swal.mixin({
             toast: true,
-            position: "top-end",
+            position: "@position", 
             showConfirmButton: false,
             timer: 2500,
             timerProgressBar: true,

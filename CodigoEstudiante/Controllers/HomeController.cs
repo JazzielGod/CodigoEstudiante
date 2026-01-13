@@ -8,7 +8,8 @@ namespace CodigoEstudiante.Controllers
 {
     public class HomeController(
         CategoryService _categoryService,
-        ProductService _productService
+        ProductService _productService,
+        OrderService _orderService
         ) : Controller
     {
         public async Task<IActionResult> Index()
@@ -54,7 +55,7 @@ namespace CodigoEstudiante.Controllers
                 cart.Add(new CartItemVM
                 {
                     ProductId = productId,
-                    ImageName = product.Name,
+                    ImageName = product.ImageName,
                     Name = product.Name,
                     Price = product.Price,
                     Quantity = quantity
@@ -67,12 +68,40 @@ namespace CodigoEstudiante.Controllers
             }
 
             HttpContext.Session.Set("Cart", cart);
+            TempData["toastPosition"] = "bottom-end";
             ViewBag.Message = "Product added to cart successfully!";
             //return RedirectToAction("ProductDetail", new { id = productId });
             return View("ProductDetail", product);
         }
 
-        public IActionResult Privacy()
+        public IActionResult ViewCart()
+        {
+            var cart = HttpContext.Session.Get<List<CartItemVM>>("Cart") ?? new List<CartItemVM>();
+            return View(cart);
+        }
+
+        public IActionResult RemoveItemToCart(int productId)
+        {
+            var cart = HttpContext.Session.Get<List<CartItemVM>>("Cart");
+            var product = cart.Find(x => x.ProductId == productId);
+            cart.Remove(product!);
+            HttpContext.Session.Set("Cart", cart);
+            return View("ViewCart", cart);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PayNow()
+        {
+            var cart = HttpContext.Session.Get<List<CartItemVM>>("Cart");
+            //TODO: change id
+            int userId = 1;
+            await _orderService.AddAsync(cart, userId);
+
+            HttpContext.Session.Remove("Cart");
+
+            return View("SaleComplete");
+        }
+        public IActionResult SaleComplete()
         {
             return View();
         }
