@@ -1,5 +1,6 @@
 ﻿using CodigoEstudiante.Context;
 using CodigoEstudiante.Entities;
+using Microsoft.EntityFrameworkCore;
 namespace CodigoEstudiante.Repositories
 {
     public class OrderRepository : GenericRepository<Order>
@@ -33,8 +34,16 @@ namespace CodigoEstudiante.Repositories
                 await transaction.RollbackAsync();
                 throw;
             }
-
-
         }
+
+        public async Task<IEnumerable<Order>> GetAllWithDetailAsync(int userId)
+        {
+            var orders = await _dbContext.Order
+                .Where(x => x.UserId == userId)
+                .Include(x => x.OrdenItems)
+                .ThenInclude(x => x.Product).ToListAsync();
+            return orders;
+        }
+
     }
 }
