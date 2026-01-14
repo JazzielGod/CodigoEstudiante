@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using CodigoEstudiante.Context;
 using CodigoEstudiante.Repositories;
@@ -20,6 +21,14 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddSession(options => { options.IdleTimeout = TimeSpan.FromMinutes(30); });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+
+        options.AccessDeniedPath = "/Home/Error";
+    });
 
 var app = builder.Build();
 

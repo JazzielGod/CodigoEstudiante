@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CodigoEstudiante.Services;
+﻿using CodigoEstudiante.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CodigoEstudiante.Controllers
 {
+    [Authorize]
     public class UserController(OrderService _orderService) : Controller
     {
         public async Task<IActionResult> MyOrders()
         {
-            //TODO: change id
-            var userId = 1;
-            var ordersvm = await _orderService.GetAllByUserAsync(userId);
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var ordersvm = await _orderService.GetAllByUserAsync(int.Parse(userId));
             return View(ordersvm);
         }
     }

@@ -1,11 +1,13 @@
 ﻿using CodigoEstudiante.Models;
 using CodigoEstudiante.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodigoEstudiante.Controllers
 {
     public class ProductController(ProductService _productService) : Controller
     {
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAllAsync();

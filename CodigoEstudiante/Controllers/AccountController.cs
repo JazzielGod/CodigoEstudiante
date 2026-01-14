@@ -1,12 +1,15 @@
 ﻿using CodigoEstudiante.Models;
 using CodigoEstudiante.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CodigoEstudiante.Controllers
 {
     public class AccountController(UserService _userService) : Controller
     {
-        public IActionResult Login() 
+        public IActionResult Login()
         {
             var viewModel = new LoginVM();
             return View(viewModel);
@@ -24,6 +27,26 @@ namespace CodigoEstudiante.Controllers
             }
             else
             {
+                List<Claim> claims = new List<Claim>(){
+                    new Claim(ClaimTypes.NameIdentifier, found.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, found.FullName),
+                    new Claim(ClaimTypes.Email, found.Email),
+                    new Claim(ClaimTypes.Role, found.Type)
+                };
+
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme
+                );
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties()
+                    {
+                        AllowRefresh = true,
+                    }
+                );
+
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -49,7 +72,14 @@ namespace CodigoEstudiante.Controllers
             }
 
             return View();
-           
+
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Index", "Home");
         }
     }
 }

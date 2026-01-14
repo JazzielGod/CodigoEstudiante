@@ -1,8 +1,9 @@
-using System.Diagnostics;
 using CodigoEstudiante.Models;
 using CodigoEstudiante.Services;
 using CodigoEstudiante.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace CodigoEstudiante.Controllers
 {
@@ -93,9 +94,8 @@ namespace CodigoEstudiante.Controllers
         public async Task<IActionResult> PayNow()
         {
             var cart = HttpContext.Session.Get<List<CartItemVM>>("Cart");
-            //TODO: change id
-            int userId = 1;
-            await _orderService.AddAsync(cart, userId);
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            await _orderService.AddAsync(cart, int.Parse(userId));
 
             HttpContext.Session.Remove("Cart");
 

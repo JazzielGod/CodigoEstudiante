@@ -1,11 +1,13 @@
 ﻿using CodigoEstudiante.Models;
 using CodigoEstudiante.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodigoEstudiante.Controllers
 {
     public class CategoryController(CategoryService _categoryService) : Controller
     {
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryService.GetAllAsync();
@@ -42,6 +44,5 @@ namespace CodigoEstudiante.Controllers
             await _categoryService.DeleteAsync(id);
             return RedirectToAction("index");
         }
-
     }
 }
