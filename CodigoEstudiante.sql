@@ -12,3 +12,6 @@ VALUES (1, 'asdad', 'asdad', 12, 2, 'asdasd');
 
 insert into [User] (Fullname, Email,password,type)
 values ('Jazzgod', 'jazz@gmail.com', '123','Cleinte');
+
+insert into [User] (Fullname, Email,password,type)
+values ('Abdiel', 'Abdiel@gmail.com', '123','Admin');
