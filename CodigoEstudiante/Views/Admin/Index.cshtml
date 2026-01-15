@@ -1,0 +1,45 @@
+﻿@model DashboardVM
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4">Dashboard Overview</h2>
+    <div class="row g-4">
+        <!-- Card Categories -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm bg-primary text-white">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Total Categories</h6>
+                        <h2 class="display-5 fw-bold mb-0">@Model.CategoryCount</h2>
+                    </div>
+                    <i class="fa-solid fa-layer-group fa-3x opacity-50"></i>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a asp-controller="Category" asp-action="Index" class="text-white text-decoration-none small">
+                        View List <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Products -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm bg-success text-white">
+                <div class="card-body p-4 d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-uppercase mb-1 opacity-75">Active Products</h6>
+                        <h2 class="display-5 fw-bold mb-0">@Model.ProductCount</h2>
+                    </div>
+                    <i class="fa-solid fa-box fa-3x opacity-50"></i>
+                </div>
+                <div class="card-footer bg-transparent border-0">
+                    <a asp-controller="Product" asp-action="Index" class="text-white text-decoration-none small">
+                        Manage Inventory <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
